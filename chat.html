@@ -94,7 +94,63 @@
 
         appendMessage("user", message);
         userInput.value = "";
-        await sendToAPI(message);
+        await sendToAPIs(message);
         sentMessages++;
         localStorage.setItem("sentMessages", sentMessages);
       });
+
+      function appendMessage(role, text) {
+        const div = document.createElement("div");
+        div.className = "message";
+        div.innerHTML = `<span class="${role}">${role === "user" ? "🙋 شما:" : "🤖 هوش مصنوعی:"}</span> ${text}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      async function sendToAPIs(message) {
+        const apiList = JSON.parse(localStorage.getItem("apiList") || "[]");
+        const models = [
+          "gpt-4o",
+          "gpt-4-1106-preview",
+          "gpt-4",
+          "gpt-3.5-turbo-16k",
+          "gpt-3.5-turbo"
+        ];
+
+        for (let apiKey of apiList) {
+          for (let model of models) {
+            const payload = {
+              model,
+              messages: [{ role: "user", content: message }]
+            };
+
+            const endpoint = apiKey.includes("gap") ? "https://api.gapgpt.com/v1/chat/completions" : "https://api.openai.com/v1/chat/completions";
+
+            try {
+              const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify(payload)
+              });
+
+              const data = await response.json();
+
+              if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+                appendMessage("bot", data.choices[0].message.content);
+                return;
+              }
+            } catch (err) {
+              console.warn(`API ${apiKey} یا مدل ${model} پاسخ نداد.`);
+            }
+          }
+        }
+
+        appendMessage("bot", "❌ هیچ پاسخی از APIها دریافت نشد. لطفاً کلیدها یا مدل‌ها را بررسی کنید.");
+      }
+    });
+  </script>
+</body>
+</html>
