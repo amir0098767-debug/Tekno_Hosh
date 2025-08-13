@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ورود کاربران | تکنوهوش</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2rem; background: #f0f8ff; }
+    input, button { padding: 0.8rem; margin: 0.5rem; border-radius: 6px; border: 1px solid #aaa; }
+    button { background: #0078d4; color: white; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>ورود کاربران</h1>
+  <input type="text" id="username" placeholder="نام کاربری" />
+  <button onclick="login()">ورود</button>
+  <p id="msg"></p>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const user = users.find(u => u.username === username);
+      if (user) {
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        location.href = "index.html";
+      } else {
+        document.getElementById("msg").textContent = "❌ کاربر یافت نشد.";
+      }
+    }
+  </script>
+</body>
+</html>

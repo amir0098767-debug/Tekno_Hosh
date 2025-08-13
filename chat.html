@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>چت با هوش مصنوعی | تکنوهوش</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Vazirmatn', sans-serif; transition: background 0.4s ease, color 0.4s ease; line-height: 1.6; }
+    body.light { background: linear-gradient(135deg, #e0f7fa, #ffffff); color: #333; }
+    body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #eee; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; flex-wrap: wrap; }
+    .main-title a { font-size: 1.8rem; font-weight: bold; text-decoration: none; color: inherit; }
+    #themeToggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
+    main { padding: 2rem; max-width: 800px; margin: auto; }
+    .chat-box { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; height: 400px; overflow-y: auto; background-color: rgba(255,255,255,0.1); }
+    .message { margin-bottom: 1rem; }
+    .user { font-weight: bold; color: #0078d4; }
+    .bot { font-weight: bold; color: #00bfa5; }
+    form { margin-top: 1rem; display: flex; gap: 0.5rem; }
+    input[type="text"] { flex: 1; padding: 0.5rem; border-radius: 6px; border: 1px solid #aaa; }
+    button { padding: 0.5rem 1rem; border: none; border-radius: 6px; background-color: #0078d4; color: white; font-weight: bold; cursor: pointer; }
+    .limit-warning { margin-top: 1rem; color: red; font-size: 0.9rem; }
+    footer { text-align: center; padding: 1rem; font-size: 0.8rem; margin-top: 2rem; }
+    @media (max-width: 768px) {
+      .main-title a { font-size: 1.4rem; }
+      .chat-box { height: 300px; }
+      form { flex-direction: column; }
+      button { width: 100%; }
+    }
+  </style>
+</head>
+<body class="light">
+  <header>
+    <h1 class="main-title"><a href="index.html">تکنوهوش | چت‌بات</a></h1>
+    <button id="themeToggle">🌙</button>
+  </header>
+
+  <main>
+    <div class="chat-box" id="chatBox">
+      <div class="message"><span class="bot">🤖 هوش مصنوعی:</span> سلام! چطور می‌تونم کمکت کنم؟</div>
+    </div>
+
+    <form id="chatForm">
+      <input type="text" id="userInput" placeholder="پیام خود را بنویسید..." required />
+      <button type="submit">ارسال</button>
+    </form>
+
+    <div class="limit-warning" id="limitWarning" style="display:none;">
+      محدودیت پیام شما تمام شده. برای ادامه، به <a href="https://rubika.ir/hooshemasnooei_t89" target="_blank">کانال روبیکا</a> مراجعه کنید.
+    </div>
+  </main>
+
+  <footer>
+    © 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeBtn = document.getElementById("themeToggle");
+      const body = document.body;
+      function setTheme(theme) {
+        body.className = theme;
+        localStorage.setItem("theme", theme);
+        themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+      }
+      const savedTheme = localStorage.getItem("theme") || "light";
+      setTheme(savedTheme);
+      themeBtn.addEventListener("click", () => {
+        const newTheme = body.className === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+      });
+
+      const chatBox = document.getElementById("chatBox");
+      const chatForm = document.getElementById("chatForm");
+      const userInput = document.getElementById("userInput");
+      const limitWarning = document.getElementById("limitWarning");
+
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+      const isGuest = !currentUser;
+      const maxMessages = currentUser?.limit || 10;
+      let sentMessages = parseInt(localStorage.getItem("sentMessages") || "0");
+
+      chatForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        if (isGuest && sentMessages >= maxMessages) {
+          limitWarning.style.display = "block";
+          return;
+        }
+
+        appendMessage("user", message);
+        userInput.value = "";
+
+        const apiKey = localStorage.getItem("activeAPI");
+        if (!apiKey) {
+          appendMessage("bot", "❌ کلید API وارد نشده. لطفاً از طریق پنل مدیریت وارد کنید.");
+          return;
+        }
+
+        try {
+          const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: "gpt-3.5-turbo",
+              messages: [{ role: "user", content: message }]
+            })
+          });
+
+          const data = await response.json();
+          const reply = data.choices?.[0]?.message?.content || "❌ پاسخ دریافت نشد.";
+          appendMessage("bot", reply);
+          sentMessages++;
+          localStorage.setItem("sentMessages", sentMessages);
+        } catch (err) {
+          appendMessage("bot", "❌ خطا در اتصال به API.");
+        }
+      });
+
+      function appendMessage(role, text) {
+        const div = document.createElement("div");
+        div.className = "message";
+        div.innerHTML = `<span class="${role}">${role === "user" ? "🙋 شما:" : "🤖 هوش مصنوعی:"}</span> ${text}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>

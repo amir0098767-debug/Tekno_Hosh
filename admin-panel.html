@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>پنل مدیریت | تکنوهوش</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Vazirmatn', sans-serif; transition: background 0.4s ease, color 0.4s ease; line-height: 1.6; }
+    body.light { background: linear-gradient(135deg, #e0f7fa, #ffffff); color: #333; }
+    body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #eee; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; flex-wrap: wrap; }
+    .main-title a { font-size: 1.8rem; font-weight: bold; text-decoration: none; color: inherit; }
+    #themeToggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
+    main { padding: 2rem; max-width: 800px; margin: auto; }
+    section { margin-bottom: 2rem; }
+    input, select { padding: 0.5rem; margin: 0.5rem 0; border-radius: 6px; border: 1px solid #aaa; width: 100%; }
+    button { padding: 0.5rem 1rem; border: none; border-radius: 6px; background-color: #0078d4; color: white; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
+    footer { text-align: center; padding: 1rem; font-size: 0.8rem; margin-top: 2rem; }
+  </style>
+</head>
+<body class="light">
+  <header>
+    <h1 class="main-title"><a href="index.html">تکنوهوش | پنل مدیریت</a></h1>
+    <button id="themeToggle">🌙</button>
+  </header>
+
+  <main>
+    <section>
+      <h2>🔑 افزودن API</h2>
+      <input type="text" id="apiInput" placeholder="کلید API را وارد کنید" />
+      <button onclick="addAPI()">افزودن</button>
+    </section>
+
+    <section>
+      <h2>👤 افزودن کاربر</h2>
+      <input type="text" id="usernameInput" placeholder="نام کاربری" />
+      <select id="roleInput">
+        <option value="user">کاربر</option>
+        <option value="admin">مدیر</option>
+      </select>
+      <input type="number" id="limitInput" placeholder="تعداد پیام مجاز" />
+      <button onclick="addUser()">افزودن</button>
+    </section>
+
+    <section>
+      <h2>📊 آمار سایت</h2>
+      <p>کاربران ثبت‌شده: <span id="userCount">--</span></p>
+      <p>پیام‌های ارسال‌شده: <span id="messageCount">--</span></p>
+    </section>
+
+    <section>
+      <h2>🗑 مدیریت کاربران</h2>
+      <table>
+        <thead>
+          <tr><th>نام کاربری</th><th>نقش</th><th>پیام مجاز</th><th>حذف</th></tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeBtn = document.getElementById("themeToggle");
+      const body = document.body;
+      function setTheme(theme) {
+        body.className = theme;
+        localStorage.setItem("theme", theme);
+        themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+      }
+      const savedTheme = localStorage.getItem("theme") || "light";
+      setTheme(savedTheme);
+      themeBtn.addEventListener("click", () => {
+        const newTheme = body.className === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+      });
+
+      updateStats();
+      renderUsers();
+    });
+
+    function addAPI() {
+      const key = document.getElementById("apiInput").value.trim();
+      if (key) {
+        localStorage.setItem("activeAPI", key);
+        alert("✅ API ذخیره شد.");
+      }
+    }
+
+    function addUser() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const role = document.getElementById("roleInput").value;
+      const limit = parseInt(document.getElementById("limitInput").value);
+      if (!username || isNaN(limit)) return;
+
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      users.push({ username, role, limit });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("✅ کاربر اضافه شد.");
+      renderUsers();
+      updateStats();
+    }
+
+    function renderUsers() {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const table = document.getElementById("userTable");
+      table.innerHTML = "";
+      users.forEach((user, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.username}</td>
+          <td>${user.role}</td>
+          <td>${user.limit}</td>
+          <td><button onclick="deleteUser(${index})">❌</button></td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    function deleteUser(index) {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      users.splice(index, 1);
+      localStorage.setItem("users", JSON.stringify(users));
+      renderUsers();
+      updateStats();
+    }
+
+    function updateStats() {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const messages = JSON.parse(localStorage.getItem("contactMessages") || "[]");
+      document.getElementById("userCount").textContent = users.length;
+      document.getElementById("messageCount").textContent = messages.length;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ارتباط با ما | تکنوهوش</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Vazirmatn', sans-serif; transition: background 0.4s ease, color 0.4s ease; line-height: 1.6; }
+    body.light { background: linear-gradient(135deg, #e0f7fa, #ffffff); color: #333; }
+    body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #eee; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; flex-wrap: wrap; }
+    .main-title a { font-size: 1.8rem; font-weight: bold; text-decoration: none; color: inherit; }
+    #themeToggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
+    main { padding: 2rem; max-width: 600px; margin: auto; }
+    form { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+    input, textarea { padding: 0.8rem; border-radius: 6px; border: 1px solid #aaa; }
+    button { padding: 0.8rem; border: none; border-radius: 6px; background-color: #0078d4; color: white; font-weight: bold; cursor: pointer; }
+    .success { margin-top: 1rem; color: green; font-size: 0.9rem; }
+    .error { margin-top: 1rem; color: red; font-size: 0.9rem; }
+    footer { text-align: center; padding: 1rem; font-size: 0.8rem; margin-top: 2rem; }
+  </style>
+</head>
+<body class="light">
+  <header>
+    <h1 class="main-title"><a href="index.html">تکنوهوش | ارتباط با ما</a></h1>
+    <button id="themeToggle">🌙</button>
+  </header>
+
+  <main>
+    <h2>📬 ارسال پیام به تیم تکنوهوش</h2>
+    <div id="formContainer"></div>
+  </main>
+
+  <footer>
+    © 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const themeBtn = document.getElementById("themeToggle");
+      const body = document.body;
+      function setTheme(theme) {
+        body.className = theme;
+        localStorage.setItem("theme", theme);
+        themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+      }
+      const savedTheme = localStorage.getItem("theme") || "light";
+      setTheme(savedTheme);
+      themeBtn.addEventListener("click", () => {
+        const newTheme = body.className === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+      });
+
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+      const container = document.getElementById("formContainer");
+
+      if (!currentUser) {
+        container.innerHTML = `<p class="error">برای ارسال پیام باید وارد حساب کاربری شوید.</p>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <form id="contactForm">
+          <input type="text" id="subject" placeholder="موضوع پیام" required />
+          <textarea id="message" rows="5" placeholder="متن پیام شما..." required></textarea>
+          <button type="submit">ارسال پیام</button>
+        </form>
+        <div class="success" id="successMsg" style="display:none;">✅ پیام شما با موفقیت ارسال شد.</div>
+      `;
+
+      document.getElementById("contactForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const subject = document.getElementById("subject").value.trim();
+        const message = document.getElementById("message").value.trim();
+        if (!subject || !message) return;
+
+        const messages = JSON.parse(localStorage.getItem("contactMessages") || "[]");
+        messages.push({
+          user: currentUser.username,
+          subject,
+          message,
+          date: new Date().toLocaleString()
+        });
+        localStorage.setItem("contactMessages", JSON.stringify(messages));
+        document.getElementById("successMsg").style.display = "block";
+        e.target.reset();
+      });
+    });
+  </script>
+</body>
+</html>
