@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>چت با هوش مصنوعی | تکنوهوش</title>
+  <title>تکنوهوش | صفحه اصلی</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,49 +11,89 @@
     body.light { background: linear-gradient(135deg, #e0f7fa, #ffffff); color: #333; }
     body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #eee; }
     header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; flex-wrap: wrap; }
-    .main-title a { font-size: 1.8rem; font-weight: bold; text-decoration: none; color: inherit; }
+    .main-title a { font-size: 2rem; font-weight: bold; text-decoration: none; color: inherit; }
+    .menu-toggle { font-size: 1.8rem; background: none; border: none; color: inherit; cursor: pointer; }
+    .menu-list { list-style: none; display: none; flex-direction: column; margin-top: 1rem; }
+    .menu-list.active { display: flex; }
+    .menu-list li { margin: 0.5rem 0; }
+    .menu-list a { color: inherit; text-decoration: none; font-weight: bold; }
     #themeToggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
-    main { padding: 2rem; max-width: 800px; margin: auto; }
-    .chat-box { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; height: 400px; overflow-y: auto; background-color: rgba(255,255,255,0.1); }
-    .message { margin-bottom: 1rem; }
-    .user { font-weight: bold; color: #0078d4; }
-    .bot { font-weight: bold; color: #00bfa5; }
-    form { margin-top: 1rem; display: flex; gap: 0.5rem; }
-    input[type="text"] { flex: 1; padding: 0.5rem; border-radius: 6px; border: 1px solid #aaa; }
-    button { padding: 0.5rem 1rem; border: none; border-radius: 6px; background-color: #0078d4; color: white; font-weight: bold; cursor: pointer; }
-    .limit-warning { margin-top: 1rem; color: red; font-size: 0.9rem; }
-    footer { text-align: center; padding: 1rem; font-size: 0.8rem; margin-top: 2rem; }
+    .user-status { font-weight: bold; margin-right: 1rem; }
+    .logout-btn { background: none; border: none; color: inherit; font-size: 0.9rem; cursor: pointer; margin-right: 1rem; text-decoration: underline; }
+    main { text-align: center; padding: 2rem; }
+    .intro h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .intro p { font-size: 1.1rem; margin-bottom: 2rem; }
+    .btn-group { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .btn { padding: 0.8rem 1.5rem; background-color: #0078d4; color: white; border: none; border-radius: 8px; text-decoration: none; font-weight: bold; }
+    .btn.secondary { background-color: #555; }
+    .btn.link { background-color: #00bfa5; }
+    .news-content {
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: rgba(255,255,255,0.2);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      max-width: 700px;
+      font-size: 1rem;
+      white-space: pre-line;
+      text-align: right;
+    }
+    .stats { margin-top: 3rem; }
+    .api-status { margin-top: 1rem; font-size: 0.9rem; }
+    footer { text-align: center; padding: 1rem; background-color: rgba(255,255,255,0.1); margin-top: 2rem; font-size: 0.9rem; }
     @media (max-width: 768px) {
-      .main-title a { font-size: 1.4rem; }
-      .chat-box { height: 300px; }
-      form { flex-direction: column; }
-      button { width: 100%; }
+      .main-title a { font-size: 1.5rem; }
+      .btn-group { flex-direction: column; gap: 0.8rem; }
+      .btn { width: 90%; font-size: 1rem; }
+      .intro h2 { font-size: 1.5rem; }
+      .intro p { font-size: 1rem; }
+      .menu-list { background-color: rgba(0,0,0,0.1); padding: 1rem; border-radius: 8px; }
+      .menu-list a { font-size: 1.1rem; }
     }
   </style>
 </head>
 <body class="light">
   <header>
-    <h1 class="main-title"><a href="index.html">تکنوهوش | چت‌بات</a></h1>
+    <h1 class="main-title"><a href="index.html">تکنوهوش | TechnoHoosh</a></h1>
+    <nav>
+      <button class="menu-toggle">☰</button>
+      <ul id="mobileMenu" class="menu-list">
+        <li><a href="chat.html">💬 چت با هوش مصنوعی</a></li>
+        <li><a href="login.html">🔐 ورود کاربران</a></li>
+        <li><a href="contact.html">📬 ارتباط با ما</a></li>
+        <li><a href="admin-login.html">🛠 ورود مدیر</a></li>
+        <li><a href="faq.html">❓ سوالات متداول</a></li>
+        <li><a href="guide.html">📘 راهنمای استفاده</a></li>
+      </ul>
+    </nav>
+    <div class="user-status" id="userStatus">مهمان</div>
+    <button class="logout-btn" id="logoutBtn" style="display:none;">خروج</button>
     <button id="themeToggle">🌙</button>
   </header>
 
   <main>
-    <div class="chat-box" id="chatBox">
-      <div class="message"><span class="bot">🤖 هوش مصنوعی:</span> سلام! چطور می‌تونم کمکت کنم؟</div>
-    </div>
+    <section class="intro">
+      <h2>به تکنوهوش خوش آمدید</h2>
+      <p>هوش مصنوعی فارسی در خدمت شماست. با ما گفتگو کنید، یاد بگیرید، و تجربه‌ای متفاوت داشته باشید.</p>
+      <div class="btn-group">
+        <a href="chat.html" class="btn">🚀 شروع چت</a>
+        <a href="login.html" class="btn secondary">🔐 ورود کاربران</a>
+        <a href="https://rubika.ir/hooshemasnooei_t89" target="_blank" class="btn link">📎 کانال روبیکا</a>
+      </div>
+    </section>
 
-    <form id="chatForm">
-      <input type="text" id="userInput" placeholder="پیام خود را بنویسید..." required />
-      <button type="submit">ارسال</button>
-    </form>
+    <div class="news-content" id="newsContent" style="display:none;"></div>
 
-    <div class="limit-warning" id="limitWarning" style="display:none;">
-      محدودیت پیام شما تمام شده. برای ادامه، به <a href="https://rubika.ir/hooshemasnooei_t89" target="_blank">کانال روبیکا</a> مراجعه کنید.
-    </div>
+    <section class="stats">
+      <h3>📊 آمار سایت</h3>
+      <p>کاربران ثبت‌شده: <span id="totalUsers">--</span></p>
+      <p>پیام‌های ارسال‌شده: <span id="totalMessages">--</span></p>
+      <div class="api-status" id="apiStatus">وضعیت API: بررسی می‌شود...</div>
+    </section>
   </main>
 
   <footer>
-    © 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش
+    <p>© 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش</p>
   </footer>
 
   <script>
@@ -72,85 +112,27 @@
         setTheme(newTheme);
       });
 
-      const chatBox = document.getElementById("chatBox");
-      const chatForm = document.getElementById("chatForm");
-      const userInput = document.getElementById("userInput");
-      const limitWarning = document.getElementById("limitWarning");
-
-      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
-      const isGuest = !currentUser;
-      const maxMessages = currentUser?.limit || 10;
-      let sentMessages = parseInt(localStorage.getItem("sentMessages") || "0");
-
-      chatForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const message = userInput.value.trim();
-        if (!message) return;
-
-        if (isGuest && sentMessages >= maxMessages) {
-          limitWarning.style.display = "block";
-          return;
-        }
-
-        appendMessage("user", message);
-        userInput.value = "";
-        await sendToAPIs(message);
-        sentMessages++;
-        localStorage.setItem("sentMessages", sentMessages);
+      const menuToggle = document.querySelector(".menu-toggle");
+      const mobileMenu = document.getElementById("mobileMenu");
+      menuToggle.addEventListener("click", () => {
+        mobileMenu.classList.toggle("active");
       });
 
-      function appendMessage(role, text) {
-        const div = document.createElement("div");
-        div.className = "message";
-        div.innerHTML = `<span class="${role}">${role === "user" ? "🙋 شما:" : "🤖 هوش مصنوعی:"}</span> ${text}`;
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
+      const userStatus = document.getElementById("userStatus");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+      if (currentUser) {
+        userStatus.textContent = `ورود: ${currentUser.username} (${currentUser.role})`;
+        logoutBtn.style.display = "inline";
       }
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+      });
 
-      async function sendToAPIs(message) {
-        const apiList = JSON.parse(localStorage.getItem("apiList") || "[]");
-        const models = [
-          "gpt-4o",
-          "gpt-4-1106-preview",
-          "gpt-4",
-          "gpt-3.5-turbo-16k",
-          "gpt-3.5-turbo"
-        ];
+      const totalUsers = JSON.parse(localStorage.getItem("users") || "[]").length;
+      const totalMessages = JSON.parse(localStorage.getItem("contactMessages") || "[]").length;
+      document.getElementById("totalUsers").textContent = totalUsers;
+      document.getElementById("totalMessages").textContent = totalMessages;
 
-        for (let apiKey of apiList) {
-          for (let model of models) {
-            const payload = {
-              model,
-              messages: [{ role: "user", content: message }]
-            };
-
-            const endpoint = apiKey.includes("gap") ? "https://api.gapgpt.com/v1/chat/completions" : "https://api.openai.com/v1/chat/completions";
-
-            try {
-              const response = await fetch(endpoint, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${apiKey}`
-                },
-                body: JSON.stringify(payload)
-              });
-
-              const data = await response.json();
-
-              if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-                appendMessage("bot", data.choices[0].message.content);
-                return;
-              }
-            } catch (err) {
-              console.warn(`API ${apiKey} یا مدل ${model} پاسخ نداد.`);
-            }
-          }
-        }
-
-        appendMessage("bot", "❌ هیچ پاسخی از APIها دریافت نشد. لطفاً کلیدها یا مدل‌ها را بررسی کنید.");
-      }
-    });
-  </script>
-</body>
-</html>
+      const
