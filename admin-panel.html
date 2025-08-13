@@ -58,18 +58,14 @@
   </div>
 
   <div id="accessDenied" class="error" style="display:none;">
-    ❌ فقط مدیران اصلی مجاز به مشاهده پنل مدیریت هستند.
+    ❌ فقط مدیران مجاز به مشاهده پنل مدیریت هستند.
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
-      const allowedAdmins = {
-        "Amir0098767": "x59x69x7",
-        "t89kalantari": "taha1234"
-      };
 
-      if (currentUser && allowedAdmins[currentUser.username] === currentUser.password) {
+      if (currentUser && currentUser.role === "admin") {
         document.getElementById("adminContent").style.display = "block";
         updateStats();
         renderUsers();
@@ -150,4 +146,9 @@
           <p><strong>متن پیام:</strong> ${msg.message}</p>
           <p><strong>تاریخ:</strong> ${msg.date}</p>
         `;
-        container
+        container.appendChild(box);
+      });
+    }
+  </script>
+</body>
+</html>
