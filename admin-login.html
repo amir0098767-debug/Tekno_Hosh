@@ -6,27 +6,38 @@
   <title>ورود مدیر | تکنوهوش</title>
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2rem; background: #fff8dc; }
-    input, button { padding: 0.8rem; margin: 0.5rem; border-radius: 6px; border: 1px solid #aaa; }
+    input, button { padding: 0.8rem; margin: 0.5rem; border-radius: 6px; border: 1px solid #aaa; width: 80%; max-width: 300px; }
     button { background: #0078d4; color: white; font-weight: bold; cursor: pointer; }
+    .error { color: red; margin-top: 1rem; }
+    footer { margin-top: 2rem; font-size: 0.8rem; }
   </style>
 </head>
 <body>
   <h1>ورود مدیر اصلی</h1>
   <input type="text" id="username" placeholder="نام کاربری" />
+  <input type="password" id="password" placeholder="رمز عبور" />
   <button onclick="login()">ورود</button>
-  <p id="msg"></p>
+  <p id="msg" class="error"></p>
+
+  <footer>© 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش</footer>
 
   <script>
     function login() {
       const username = document.getElementById("username").value.trim();
-      if (username === "amir0098767") {
-        localStorage.setItem("loggedInUser", JSON.stringify({ username, role: "admin", limit: 999 }));
+      const password = document.getElementById("password").value.trim();
+      const admins = {
+        "Amir0098767": "x59x69x7",
+        "t89kalantari": "taha1234"
+      };
+
+      if (admins[username] && admins[username] === password) {
+        const user = { username, role: "admin", limit: 999 };
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
         location.href = "admin-panel.html";
       } else {
-        document.getElementById("msg").textContent = "❌ فقط مدیر اصلی مجاز است.";
+        document.getElementById("msg").textContent = "❌ نام کاربری یا رمز عبور اشتباه است.";
       }
     }
   </script>
 </body>
 </html>
-
