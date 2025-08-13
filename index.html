@@ -10,7 +10,10 @@
     h1 { font-size: 2rem; color: #0078d4; }
     #noticeBox { background: #fff8dc; border: 1px solid #ccc; padding: 1rem; margin: 1rem 0; display: none; font-weight: bold; }
     main { max-width: 800px; margin: auto; }
+    section { margin-bottom: 2rem; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background-color: #f9f9f9; }
     footer { text-align: center; margin-top: 3rem; font-size: 0.8rem; color: #666; }
+    a.button { display: inline-block; padding: 0.5rem 1rem; background: #0078d4; color: white; text-decoration: none; border-radius: 6px; margin-top: 1rem; }
   </style>
 </head>
 <body>
@@ -21,8 +24,22 @@
   <div id="noticeBox"></div>
 
   <main>
-    <p>به تکنوهوش خوش آمدید! اینجا می‌تونید با هوش مصنوعی چت کنید، پیام بفرستید، و از امکانات سایت استفاده کنید.</p>
-    <p>برای شروع، از منوی بالا یا لینک‌های صفحه استفاده کنید.</p>
+    <section class="card">
+      <h2>درباره تکنوهوش</h2>
+      <p>تکنوهوش بستری برای استفاده از هوش مصنوعی در زندگی روزمره است. شما می‌تونید با چت‌بات‌های هوشمند گفتگو کنید، پیام بفرستید، و از ابزارهای متنوع استفاده کنید.</p>
+    </section>
+
+    <section class="card">
+      <h2>شروع چت با هوش مصنوعی</h2>
+      <p>برای شروع گفتگو با هوش مصنوعی، روی دکمه زیر کلیک کنید:</p>
+      <a href="chat.html" class="button">شروع چت</a>
+    </section>
+
+    <section class="card">
+      <h2>تماس با ما</h2>
+      <p>برای ارسال پیام یا پیشنهاد، از فرم تماس استفاده کنید یا به پنل مدیریت مراجعه کنید.</p>
+      <a href="contact.html" class="button">ارسال پیام</a>
+    </section>
   </main>
 
   <footer>
