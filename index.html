@@ -5,129 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>تکنوهوش | صفحه اصلی</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Vazirmatn', sans-serif; transition: background 0.4s ease, color 0.4s ease; line-height: 1.6; }
-    body.light { background: linear-gradient(135deg, #e0f7fa, #ffffff); color: #333; }
-    body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #eee; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; flex-wrap: wrap; }
-    .main-title a { font-size: 2rem; font-weight: bold; text-decoration: none; color: inherit; }
-    .menu-toggle { font-size: 1.8rem; background: none; border: none; color: inherit; cursor: pointer; }
-    .menu-list { list-style: none; display: none; flex-direction: column; margin-top: 1rem; }
-    .menu-list.active { display: flex; }
-    .menu-list li { margin: 0.5rem 0; }
-    .menu-list a { color: inherit; text-decoration: none; font-weight: bold; }
-    #themeToggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
-    .user-status { font-weight: bold; margin-right: 1rem; }
-    .logout-btn { background: none; border: none; color: inherit; font-size: 0.9rem; cursor: pointer; margin-right: 1rem; text-decoration: underline; }
-    main { text-align: center; padding: 2rem; }
-    .intro h2 { font-size: 1.8rem; margin-bottom: 1rem; }
-    .intro p { font-size: 1.1rem; margin-bottom: 2rem; }
-    .btn-group { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .btn { padding: 0.8rem 1.5rem; background-color: #0078d4; color: white; border: none; border-radius: 8px; text-decoration: none; font-weight: bold; }
-    .btn.secondary { background-color: #555; }
-    .btn.link { background-color: #00bfa5; }
-    .stats { margin-top: 3rem; }
-    .api-status { margin-top: 1rem; font-size: 0.9rem; }
-    footer { text-align: center; padding: 1rem; background-color: rgba(255,255,255,0.1); margin-top: 2rem; font-size: 0.9rem; }
-    @media (max-width: 768px) {
-      .main-title a { font-size: 1.5rem; }
-      .btn-group { flex-direction: column; gap: 0.8rem; }
-      .btn { width: 90%; font-size: 1rem; }
-      .intro h2 { font-size: 1.5rem; }
-      .intro p { font-size: 1rem; }
-      .menu-list { background-color: rgba(0,0,0,0.1); padding: 1rem; border-radius: 8px; }
-      .menu-list a { font-size: 1.1rem; }
-    }
+    body { font-family: sans-serif; padding: 2rem; background: #ffffff; color: #333; }
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: 2rem; color: #0078d4; }
+    #noticeBox { background: #fff8dc; border: 1px solid #ccc; padding: 1rem; margin: 1rem 0; display: none; font-weight: bold; }
+    main { max-width: 800px; margin: auto; }
+    footer { text-align: center; margin-top: 3rem; font-size: 0.8rem; color: #666; }
   </style>
 </head>
-<body class="light">
+<body>
   <header>
-    <h1 class="main-title"><a href="index.html">تکنوهوش | TechnoHoosh</a></h1>
-    <nav>
-      <button class="menu-toggle">☰</button>
-      <ul id="mobileMenu" class="menu-list">
-        <li><a href="chat.html">💬 چت با هوش مصنوعی</a></li>
-        <li><a href="login.html">🔐 ورود کاربران</a></li>
-        <li><a href="contact.html">📬 ارتباط با ما</a></li>
-        <li><a href="admin-login.html">🛠 ورود مدیر</a></li>
-        <li><a href="faq.html">❓ سوالات متداول</a></li>
-        <li><a href="guide.html">📘 راهنمای استفاده</a></li>
-      </ul>
-    </nav>
-    <div class="user-status" id="userStatus">مهمان</div>
-    <button class="logout-btn" id="logoutBtn" style="display:none;">خروج</button>
-    <button id="themeToggle">🌙</button>
+    <h1>تکنوهوش | هوش مصنوعی برای همه</h1>
   </header>
 
-  <main>
-    <section class="intro">
-      <h2>به تکنوهوش خوش آمدید</h2>
-      <p>هوش مصنوعی فارسی در خدمت شماست. با ما گفتگو کنید، یاد بگیرید، و تجربه‌ای متفاوت داشته باشید.</p>
-      <div class="btn-group">
-        <a href="chat.html" class="btn">🚀 شروع چت</a>
-        <a href="login.html" class="btn secondary">🔐 ورود کاربران</a>
-        <a href="https://rubika.ir/hooshemasnooei_t89" target="_blank" class="btn link">📎 کانال روبیکا</a>
-      </div>
-    </section>
+  <div id="noticeBox"></div>
 
-    <section class="stats">
-      <h3>📊 آمار سایت</h3>
-      <p>کاربران ثبت‌شده: <span id="totalUsers">--</span></p>
-      <p>پیام‌های ارسال‌شده: <span id="totalMessages">--</span></p>
-      <div class="api-status" id="apiStatus">وضعیت API: بررسی می‌شود...</div>
-    </section>
+  <main>
+    <p>به تکنوهوش خوش آمدید! اینجا می‌تونید با هوش مصنوعی چت کنید، پیام بفرستید، و از امکانات سایت استفاده کنید.</p>
+    <p>برای شروع، از منوی بالا یا لینک‌های صفحه استفاده کنید.</p>
   </main>
 
   <footer>
-    <p>© 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش</p>
+    © 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش
   </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const themeBtn = document.getElementById("themeToggle");
-      const body = document.body;
-      function setTheme(theme) {
-        body.className = theme;
-        localStorage.setItem("theme", theme);
-        themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
-      }
-      const savedTheme = localStorage.getItem("theme") || "light";
-      setTheme(savedTheme);
-      themeBtn.addEventListener("click", () => {
-        const newTheme = body.className === "dark" ? "light" : "dark";
-        setTheme(newTheme);
-      });
-
-      const menuToggle = document.querySelector(".menu-toggle");
-      const mobileMenu = document.getElementById("mobileMenu");
-      menuToggle.addEventListener("click", () => {
-        mobileMenu.classList.toggle("active");
-      });
-
-      const userStatus = document.getElementById("userStatus");
-      const logoutBtn = document.getElementById("logoutBtn");
-      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
-      if (currentUser) {
-        userStatus.textContent = `ورود: ${currentUser.username} (${currentUser.role})`;
-        logoutBtn.style.display = "inline";
-      }
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("loggedInUser");
-        location.reload();
-      });
-
-      const totalUsers = JSON.parse(localStorage.getItem("users") || "[]").length;
-      const totalMessages = JSON.parse(localStorage.getItem("contactMessages") || "[]").length;
-      document.getElementById("totalUsers").textContent = totalUsers;
-      document.getElementById("totalMessages").textContent = totalMessages;
-
-      const apiKey = localStorage.getItem("activeAPI");
-      const apiStatus = document.getElementById("apiStatus");
-      if (apiKey) {
-        apiStatus.textContent = "وضعیت API: فعال ✅";
-      } else {
-        apiStatus.textContent = "وضعیت API: وارد نشده ❌";
+      const notice = localStorage.getItem("siteNotice");
+      if (notice) {
+        const box = document.getElementById("noticeBox");
+        box.textContent = notice;
+        box.style.display = "block";
       }
     });
   </script>
