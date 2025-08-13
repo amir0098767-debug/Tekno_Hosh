@@ -5,31 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>پنل مدیریت | تکنوهوش</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Vazirmatn', sans-serif; transition: background 0.4s ease, color 0.4s ease; line-height: 1.6; }
-    body.light { background: linear-gradient(135deg, #e0f7fa, #ffffff); color: #333; }
-    body.dark { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #eee; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; flex-wrap: wrap; }
-    .main-title a { font-size: 1.8rem; font-weight: bold; text-decoration: none; color: inherit; }
-    #themeToggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
-    main { padding: 2rem; max-width: 800px; margin: auto; }
+    body { font-family: sans-serif; padding: 2rem; background: #f0f8ff; }
     section { margin-bottom: 2rem; }
-    input, select, textarea { padding: 0.5rem; margin: 0.5rem 0; border-radius: 6px; border: 1px solid #aaa; width: 100%; }
-    button { padding: 0.5rem 1rem; border: none; border-radius: 6px; background-color: #0078d4; color: white; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
+    input, select, textarea, button { padding: 0.5rem; margin: 0.5rem 0; border-radius: 6px; border: 1px solid #aaa; width: 100%; max-width: 600px; }
+    button { background: #0078d4; color: white; font-weight: bold; cursor: pointer; }
     table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
-    .message-box { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background-color: rgba(255,255,255,0.1); }
-    footer { text-align: center; padding: 1rem; font-size: 0.8rem; margin-top: 2rem; }
+    .message-box { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background-color: #eef; }
+    .error { text-align: center; margin-top: 2rem; font-size: 1.1rem; color: red; }
   </style>
 </head>
-<body class="light">
-  <header>
-    <h1 class="main-title"><a href="index.html">تکنوهوش | پنل مدیریت</a></h1>
-    <button id="themeToggle">🌙</button>
-  </header>
-
-  <main>
+<body>
+  <h1>پنل مدیریت تکنوهوش</h1>
+  <div id="adminContent" style="display:none;">
     <section>
       <h2>🔑 افزودن API</h2>
       <input type="text" id="apiInput" placeholder="کلید API را وارد کنید" />
@@ -67,31 +55,28 @@
       <h2>📨 پیام‌های دریافتی</h2>
       <div id="messagesContainer"></div>
     </section>
-  </main>
+  </div>
 
-  <footer>
-    © 2025 تکنوهوش | توسعه توسط متخصصان تکنوهوش
-  </footer>
+  <div id="accessDenied" class="error" style="display:none;">
+    ❌ فقط مدیران اصلی مجاز به مشاهده پنل مدیریت هستند.
+  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const themeBtn = document.getElementById("themeToggle");
-      const body = document.body;
-      function setTheme(theme) {
-        body.className = theme;
-        localStorage.setItem("theme", theme);
-        themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
-      }
-      const savedTheme = localStorage.getItem("theme") || "light";
-      setTheme(savedTheme);
-      themeBtn.addEventListener("click", () => {
-        const newTheme = body.className === "dark" ? "light" : "dark";
-        setTheme(newTheme);
-      });
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+      const allowedAdmins = {
+        "Amir0098767": "x59x69x7",
+        "t89kalantari": "taha1234"
+      };
 
-      updateStats();
-      renderUsers();
-      renderMessages();
+      if (currentUser && allowedAdmins[currentUser.username] === currentUser.password) {
+        document.getElementById("adminContent").style.display = "block";
+        updateStats();
+        renderUsers();
+        renderMessages();
+      } else {
+        document.getElementById("accessDenied").style.display = "block";
+      }
     });
 
     function addAPI() {
@@ -148,13 +133,6 @@
     }
 
     function renderMessages() {
-      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
-      const allowed = ["t89kalantari", "amir0098767"];
-      if (!currentUser || !allowed.includes(currentUser.username)) {
-        document.getElementById("messagesContainer").innerHTML = "<p>❌ فقط مدیران اصلی مجاز به مشاهده پیام‌ها هستند.</p>";
-        return;
-      }
-
       const messages = JSON.parse(localStorage.getItem("contactMessages") || "[]");
       const container = document.getElementById("messagesContainer");
       if (messages.length === 0) {
@@ -172,9 +150,4 @@
           <p><strong>متن پیام:</strong> ${msg.message}</p>
           <p><strong>تاریخ:</strong> ${msg.date}</p>
         `;
-        container.appendChild(box);
-      });
-    }
-  </script>
-</body>
-</html>
+        container
