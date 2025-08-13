@@ -32,7 +32,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const notice = localStorage.getItem("siteNotice");
-      if (notice) {
+      if (notice && notice.trim() !== "") {
         const box = document.getElementById("noticeBox");
         box.textContent = notice;
         box.style.display = "block";
