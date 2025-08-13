@@ -24,38 +24,11 @@
     .intro h2 { font-size: 1.8rem; margin-bottom: 1rem; }
     .intro p { font-size: 1.1rem; margin-bottom: 2rem; }
     .btn-group { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .btn {
-      padding: 0.8rem 1.5rem;
-      background-color: #0078d4;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .btn:active {
-      transform: scale(0.98);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
+    .btn { padding: 0.8rem 1.5rem; background-color: #0078d4; color: white; border: none; border-radius: 8px; text-decoration: none; font-weight: bold; }
     .btn.secondary { background-color: #555; }
     .btn.link { background-color: #00bfa5; }
     .stats { margin-top: 3rem; }
     .api-status { margin-top: 1rem; font-size: 0.9rem; }
-    .news-box {
-      margin: 2rem auto;
-      padding: 1rem;
-      background-color: rgba(255,255,255,0.2);
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      max-width: 700px;
-      font-weight: bold;
-      display: none;
-    }
     footer { text-align: center; padding: 1rem; background-color: rgba(255,255,255,0.1); margin-top: 2rem; font-size: 0.9rem; }
     @media (max-width: 768px) {
       .main-title a { font-size: 1.5rem; }
@@ -98,8 +71,6 @@
       </div>
     </section>
 
-    <div class="news-box" id="newsBox"></div>
-
     <section class="stats">
       <h3>📊 آمار سایت</h3>
       <p>کاربران ثبت‌شده: <span id="totalUsers">--</span></p>
@@ -136,4 +107,29 @@
 
       const userStatus = document.getElementById("userStatus");
       const logoutBtn = document.getElementById("logoutBtn");
-      const currentUser = JSON.parse
+      const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+      if (currentUser) {
+        userStatus.textContent = `ورود: ${currentUser.username} (${currentUser.role})`;
+        logoutBtn.style.display = "inline";
+      }
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedInUser");
+        location.reload();
+      });
+
+      const totalUsers = JSON.parse(localStorage.getItem("users") || "[]").length;
+      const totalMessages = JSON.parse(localStorage.getItem("contactMessages") || "[]").length;
+      document.getElementById("totalUsers").textContent = totalUsers;
+      document.getElementById("totalMessages").textContent = totalMessages;
+
+      const apiKey = localStorage.getItem("activeAPI");
+      const apiStatus = document.getElementById("apiStatus");
+      if (apiKey) {
+        apiStatus.textContent = "وضعیت API: فعال ✅";
+      } else {
+        apiStatus.textContent = "وضعیت API: وارد نشده ❌";
+      }
+    });
+  </script>
+</body>
+</html>
