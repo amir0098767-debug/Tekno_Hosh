@@ -31,7 +31,7 @@
       };
 
       if (admins[username] && admins[username] === password) {
-        const user = { username, role: "admin", limit: 999 };
+        const user = { username, role: "admin", password };
         localStorage.setItem("loggedInUser", JSON.stringify(user));
         location.href = "admin-panel.html";
       } else {
