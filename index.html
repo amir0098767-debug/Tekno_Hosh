@@ -29,6 +29,25 @@
     .btn.link { background-color: #00bfa5; }
     .stats { margin-top: 3rem; }
     .api-status { margin-top: 1rem; font-size: 0.9rem; }
+    .news-section {
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: rgba(255,255,255,0.2);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      max-width: 700px;
+      text-align: right;
+    }
+    .news-section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #aaa;
+      padding-bottom: 0.5rem;
+    }
+    .news-content {
+      font-size: 1rem;
+      white-space: pre-line;
+    }
     footer { text-align: center; padding: 1rem; background-color: rgba(255,255,255,0.1); margin-top: 2rem; font-size: 0.9rem; }
     @media (max-width: 768px) {
       .main-title a { font-size: 1.5rem; }
@@ -69,6 +88,11 @@
         <a href="login.html" class="btn secondary">🔐 ورود کاربران</a>
         <a href="https://rubika.ir/hooshemasnooei_t89" target="_blank" class="btn link">📎 کانال روبیکا</a>
       </div>
+    </section>
+
+    <section class="news-section" id="newsSection" style="display:none;">
+      <h3>📢 اطلاعیه‌ها</h3>
+      <div class="news-content" id="newsContent"></div>
     </section>
 
     <section class="stats">
@@ -116,20 +140,3 @@
         localStorage.removeItem("loggedInUser");
         location.reload();
       });
-
-      const totalUsers = JSON.parse(localStorage.getItem("users") || "[]").length;
-      const totalMessages = JSON.parse(localStorage.getItem("contactMessages") || "[]").length;
-      document.getElementById("totalUsers").textContent = totalUsers;
-      document.getElementById("totalMessages").textContent = totalMessages;
-
-      const apiKey = localStorage.getItem("activeAPI");
-      const apiStatus = document.getElementById("apiStatus");
-      if (apiKey) {
-        apiStatus.textContent = "وضعیت API: فعال ✅";
-      } else {
-        apiStatus.textContent = "وضعیت API: وارد نشده ❌";
-      }
-    });
-  </script>
-</body>
-</html>
