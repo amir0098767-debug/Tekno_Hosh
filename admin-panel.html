@@ -55,6 +55,13 @@
       <h2>📨 پیام‌های دریافتی</h2>
       <div id="messagesContainer"></div>
     </section>
+
+    <section>
+      <h2>📰 خبر صفحه اول</h2>
+      <textarea id="siteNotice" placeholder="متن خبر را وارد کنید..."></textarea>
+      <button onclick="saveNotice()">ذخیره خبر</button>
+      <button onclick="clearNotice()">حذف خبر</button>
+    </section>
   </div>
 
   <div id="accessDenied" class="error" style="display:none;">
@@ -64,12 +71,12 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
-
       if (currentUser && currentUser.role === "admin") {
         document.getElementById("adminContent").style.display = "block";
         updateStats();
         renderUsers();
         renderMessages();
+        loadNotice();
       } else {
         document.getElementById("accessDenied").style.display = "block";
       }
@@ -148,6 +155,25 @@
         `;
         container.appendChild(box);
       });
+    }
+
+    function saveNotice() {
+      const text = document.getElementById("siteNotice").value.trim();
+      if (text) {
+        localStorage.setItem("siteNotice", text);
+        alert("✅ خبر ذخیره شد.");
+      }
+    }
+
+    function clearNotice() {
+      localStorage.removeItem("siteNotice");
+      document.getElementById("siteNotice").value = "";
+      alert("✅ خبر حذف شد.");
+    }
+
+    function loadNotice() {
+      const notice = localStorage.getItem("siteNotice") || "";
+      document.getElementById("siteNotice").value = notice;
     }
   </script>
 </body>
